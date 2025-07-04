@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>DUMOOC 심리학의 이해 강의 시청</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 1.5rem;
+      color: #333;
+      line-height: 1.6;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .select-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    select {
+      padding: 0.6rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      min-width: 140px;
+    }
+    iframe {
+      display: block;
+      margin: 0 auto 1.5rem;
+      width: 90vw;
+      max-width: 720px;
+      height: calc(90vw * 9 / 16);
+      max-height: 405px;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .notice {
+      max-width: 720px;
+      margin: 1rem auto 2rem;
+      font-size: 0.95rem;
+      color: #444;
+      background: #fffbea;
+      padding: 1rem;
+      border-left: 6px solid #ffcc00;
+      border-radius: 8px;
+    }
+    .downloads {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .downloads a {
+      background-color: #007bff;
+      color: white;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.2s;
+    }
+    .downloads a:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>DUMOOC 심리학의 이해 강의 시청</h1>
+
+  <div class="select-container">
+    <label for="weekSelect">주차 선택:
+      <select id="weekSelect">
+        <option value="">-- 주차 선택 --</option>
+        <option value="9">9주차</option>
+        <option value="10">10주차</option>
+        <option value="11">11주차</option>
+        <option value="12">12주차</option>
+        <option value="13">13주차</option>
+        <option value="14">14주차</option>
+      </select>
+    </label>
+
+    <label for="lectureSelect">강의 선택:
+      <select id="lectureSelect" disabled>
+        <option value="">-- 주차를 먼저 선택하세요 --</option>
+      </select>
+    </label>
+  </div>
+
+  <iframe id="videoFrame" allow="autoplay" style="display:none;"></iframe>
+
+  <div class="notice">
+    📢 해당 영상 시청은 <strong>DUMOOC 출석과 관계가 없으므로</strong>,  
+    <strong>대구대학교 사이트 점검이 끝난 후</strong> 반드시 DUMOOC에서 시청해 주세요.  
+    <strong>(출석 인정 기간: 7월 8일 23시 59분까지)</strong>
+  </div>
+
+ <div class="downloads">
+  <a href="files/과제_양식_및_공지사항.pdf" download>📄 과제 양식 및 공지사항 다운로드</a>
+</div>
+
+  <script>
+    const videoMap = {
+      '9-1': '1IViaUhR56lzRsZt8sW8JdEHdZvK_-a37',
+      '9-2': '1hB7l5ZkNxCppdML4jmjuGlIWj4ESaUPO',
+      '9-3': '1AQjKW3kesBM048oyG8KA3SfZfetAuHCK',
+      '10-1': '1XRv96n6SVtc9BNQr9PCStMjUd5OiKrsj',
+      '10-2': '1mu_vhrSNcg6IFOhV2C12_kxTgSvA6HOx',
+      '10-3': '1hGsO0-iupnjItMnUwfOjMw4YR9Kn7BoQ',
+      '11-1': '18MDGFpAhg1u4t2GWxyy9A9AFvLApGOYc',
+      '11-2': '1wJ7u2PzAKQIzMH8wenv6kGzVxh4SVNKq',
+      '11-3': '1LncOBDmCiGPmhRhNV8kuTcYQ4PcHM-ZV',
+      '12-1': '17QqJN3laNT2q8GkY94xKU7glWCvsk5l1',
+      '12-2': '1plyaka-tc6OkOKC1LxiiA4Oi8F0oM-JG',
+      '12-3': '17Tbt9nIen6pck_pLhI7pWGmTrSOJtTQA',
+      '13-1': '1BMb1aO2kzH15wf_ikWh7WPqUDlwNX6KJ',
+      '13-2': '1ULhhxehzWwhuWTl9uDCO4t6_6-5GCo48',
+      '13-3': '15f92EVzfc-rBlV191FifJP9XBEkstpQo',
+      '14-1': '1u0fqD70cmspifBCT0JZ8PlIR5wSvI1wQ',
+      '14-2': '1bNnRtXKRfKlW8v0w2V_Ds3q0gUL36BfO',
+      '14-3': '1x8tjeyDBdLd8TyokH4yGapPZLyOJfi1p'
+    };
+
+    const weekSelect = document.getElementById('weekSelect');
+    const lectureSelect = document.getElementById('lectureSelect');
+    const videoFrame = document.getElementById('videoFrame');
+
+    weekSelect.addEventListener('change', () => {
+      const week = weekSelect.value;
+      lectureSelect.innerHTML = '';
+      videoFrame.style.display = 'none';
+
+      if (!week) {
+        lectureSelect.disabled = true;
+        lectureSelect.innerHTML = '<option value="">-- 주차를 먼저 선택하세요 --</option>';
+        return;
+      }
+
+      lectureSelect.disabled = false;
+      lectureSelect.innerHTML = '<option value="">-- 강의를 선택하세요 --</option>';
+      for (let i = 1; i <= 3; i++) {
+        const key = `${week}-${i}`;
+        lectureSelect.innerHTML += `<option value="${key}">${key}</option>`;
+      }
+    });
+
+    lectureSelect.addEventListener('change', () => {
+      const selected = lectureSelect.value;
+      const fileId = videoMap[selected];
+      if (fileId) {
+        videoFrame.src = `https://drive.google.com/file/d/${fileId}/preview`;
+        videoFrame.style.display = 'block';
+      } else {
+        videoFrame.style.display = 'none';
+      }
+    });
+  </script>
+
+</body>
+</html
